@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/bootstrap.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body ng-app="myapp">
+<div>
+    <p>我的博客 --- Javascript</p>
+    <div ui-view="" class="wrapper"></div>
+    <button class="addbtn" ui-sref="add">添加</button>
+</div>
+</body>
+<!--<script src="/index.js"></script>-->
+<!--<script src="./js/router.js"></script>-->
+<script src="/angular.js"></script>
+<script src="/angular-ui-router.js"></script>
+<script src="/jquery.js"></script>
+<script>
+    var apps=angular.module('myapp',['ui.router'])
+    apps.config(function($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise("/list")
+        $stateProvider.state({
+            name: "title",
+            "url": "/title/:id",
+            templateUrl: "/html/list.html",
+            controller: function($scope, $stateParams,$http) {
+                $scope.content = $stateParams.id
+                console.log($scope.content);
+                $http({
+                   url: "/sel?id="+$scope.content,
+                   method: "get"
+               }).success(function(res) {
+                   // $scope.data = res.data
+                   $scope.title=res[0].title;
+                   console.log(res[0]);
+                   $scope.cont=res[0].content;
+                   $scope.eye=res[0].eye;
+                   // location.href="/list";
+               })
+            },
+            params: {
+                ID: ""
+            }
+        }).state({
+            name: "list",
+            "url": "/list",
+            template: "<ul><li ng-repeat='k in data'><a ui-sref='title({id:iddata[$index]})' ng-bind='k'></a><span>浏览量：{{eyedata[$index]}}</span></li></ul>",
+            controller: function($scope, $http) {
+                $scope.datas = "<%=num%>";
+                $scope.iddatas = "<%=id%>";
+                $scope.eyedatas = "<%=eye%>";
+               
+//                $scope.data=JSON.parse($scope.datas);
+                $scope.data=$scope.datas.split(",");
+                $scope.iddata=$scope.iddatas.split(",");
+                $scope.eyedata=$scope.eyedatas.split(",");
+                 console.log($scope.eyedata);
+//                
+            }
+        }).state({
+            name: "add",
+            "url": "/add",
+            template: '<div><span>标题：</span><input class="txt" type="text" /></div><div><span>内容：</span><textarea class="cont" name="" id="" cols="30" rows="10"></textarea></div><button ng-click="addfn()">确认</button>',
+            controller: function($scope, $http) {
+                $scope.addfn=function(){
+                    console.log(1);
+                    var cont=$(".cont").val();
+                    var txt=$(".txt").val();
+                    $http.get("/add?cont="+cont+"&tit="+txt).success(function(rs){
+                        console.log(rs);
+                        location.reload();
+                    })
+                }  
+            }
+        })
+
+    })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="./js/bootstrap.css">
+    <link rel="stylesheet" href="./js/style.css">
+</head>
+<body>
+<div ui-view="">
+    <p>我的博客 --- Javascript</p>
+    <ul>
+        <li ng-repeat="k in data">
+            <a ui-sref="title{ID:k.content}">{k.title}</a>
+        </li>
+    </ul>
+</div>
+</body>
+<script src="./js/index.js"></script>
+<!--<script src="./js/router.js"></script>-->
+<script src="./js/angular.js"></script>
+<script src="./js/angular-ui-router.js"></script>
+<script src="./js/jquery.js"></script>
+<script>
+    var apps=angular.module('myapp',['ui.router'])
+    apps.config(function($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise("/list")
+        $stateProvider.state({
+            name: "title",
+            "url": "/title",
+            templateUrl: "html/list.html",
+            controller: function($scope, $stateParams) {
+                $scope.content = $stateParams.ID
+            },
+            params: {
+                ID: ""
+            }
+        }).state({
+            name: "list",
+            "url": "/list",
+            templateUrl: "index.html",
+            controller: function($scope, $http) {
+                $http({
+                    url: "/sel",
+                    method: "get"
+                }).success(function(res) {
+                    $scope.data = res.data
+                    console.log($scope.data)
+                })
+            }
+        })
+
+    })
+
+</script>
+</body>
+</html>

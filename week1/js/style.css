@@ -1,0 +1,25 @@
+*{
+    margin:0;
+    padding:0;
+}
+.wrapper{
+    margin-left: 100px;
+}
+.addbtn{
+    margin-left: 100px;
+}
+li{
+    width: 800px;
+}
+li span{
+    width: 100%;
+    display: inline-block;
+    text-align: right;
+}
+p{
+    width: auto;
+    height:50px;
+    background:aqua;
+    text-align: center;
+    line-height: 50px;
+}
